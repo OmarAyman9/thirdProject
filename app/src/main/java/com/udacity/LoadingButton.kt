@@ -26,11 +26,11 @@ class LoadingButton @JvmOverloads constructor(
         context.getColor(R.color.colorPrimaryDark)
     )
     private val circuleColor = attebrs.getColor(
-        R.styleable.LoadingButton_backgroundColor,
+        R.styleable.LoadingButton_circleColor,
         context.getColor(R.color.colorAccent)
     )
     private val textColor = attebrs.getColor(
-        R.styleable.LoadingButton_backgroundColor,
+        R.styleable.LoadingButton_textColor,
         context.getColor(R.color.white)
     )
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
