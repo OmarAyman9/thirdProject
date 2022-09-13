@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
@@ -32,32 +33,6 @@ class LoadingButton @JvmOverloads constructor(
         R.styleable.LoadingButton_backgroundColor,
         context.getColor(R.color.white)
     )
-
-
-    private var txt = context.getString(R.string.button_text)
-
-    private var sweepAngle = 0.0f
-    private var completence = 0.0f
-    private var progressRect = RectF()
-    private var circleRect = RectF()
-    private val txtRect = RectF()
-
-
-    private val valueAnimator = ValueAnimator.ofFloat(0f, 100f).apply {
-        duration = 1500
-        repeatCount = ValueAnimator.INFINITE
-        interpolator = AccelerateInterpolator()
-        addUpdateListener {
-            completence = animatedFraction
-            sweepAngle = 360f * completence
-            progressRect.right = widthSize * completence
-            if (buttonState == ButtonState.Completed) {
-                cancel()
-            }
-            super.invalidate()
-        }
-    }
-
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
         color = backgroundColorOnStart
@@ -76,6 +51,31 @@ class LoadingButton @JvmOverloads constructor(
         color = textColor
     }
 
+
+    private var txt = context.getString(R.string.button_text)
+
+    private var sweepAngle = 0.0f
+    private var completence = 0.0f
+    private var progressRect = RectF()
+    private var circleRect = RectF()
+    private val txtRect = RectF()
+
+    private val valueAnimator = ValueAnimator.ofFloat(0f, 100f).apply {
+        duration = 1500
+        repeatCount = ValueAnimator.INFINITE
+        interpolator = AccelerateInterpolator()
+        addUpdateListener {
+            completence = animatedFraction
+            sweepAngle = 360f * completence
+            progressRect.right = widthSize * completence
+            if (buttonState == ButtonState.Completed) {
+                cancel()
+            }
+            super.invalidate()
+        }
+    }
+
+
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
         when (new) {
             ButtonState.Clicked -> {
@@ -83,7 +83,8 @@ class LoadingButton @JvmOverloads constructor(
             }
             ButtonState.Loading -> {
                 txt = context.getString(R.string.button_loading)
-                txtPaint.getTextBounds(txt,0,txt.length,txtRect)
+                val txtRect2 = Rect()
+                txtPaint.getTextBounds(txt, 0, txt.length, txtRect2)
                 circleRect.set(
                     widthSize / 2f + txtRect.width() / 2f + txtRect.height() / 2f,
                     heightSize / 2f - txtRect.height() / 2f,
