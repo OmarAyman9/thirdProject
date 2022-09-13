@@ -17,7 +17,12 @@ class LoadingButton @JvmOverloads constructor(
     private var widthSize = 0
     private var heightSize = 0
     private val attebrs = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton)
-    private val backgroundColorOnStart = attebrs.getColor(
+
+    private val textColor = attebrs.getColor(
+        R.styleable.LoadingButton_textColor,
+        context.getColor(R.color.white)
+    )
+    private val bgColorOnStart = attebrs.getColor(
         R.styleable.LoadingButton_backgroundColor,
         context.getColor(R.color.colorPrimary)
     )
@@ -29,13 +34,10 @@ class LoadingButton @JvmOverloads constructor(
         R.styleable.LoadingButton_circleColor,
         context.getColor(R.color.colorAccent)
     )
-    private val textColor = attebrs.getColor(
-        R.styleable.LoadingButton_textColor,
-        context.getColor(R.color.white)
-    )
+
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
-        color = backgroundColorOnStart
+        color = bgColorOnStart
     }
     private val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         strokeCap = Paint.Cap.ROUND
@@ -91,6 +93,7 @@ class LoadingButton @JvmOverloads constructor(
                     widthSize / 2f + txtRect.width() / 2f + txtRect.height() * 1.5f,
                     heightSize / 2f + txtRect.height() / 2f
                 )
+                valueAnimator.start()
             }
 
             ButtonState.Completed -> {
@@ -110,7 +113,7 @@ class LoadingButton @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawColor(backgroundColorOnStart)
+        canvas.drawColor(bgColorOnStart)
         canvas.drawText(
             context.getString(R.string.button_text),
             (widthSize / 2).toFloat(),
